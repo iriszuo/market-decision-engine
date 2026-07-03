@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/ai-trading-os/adjustment_schema.json",
+  "title": "MODE B Intraday Adjustment",
+  "type": "object",
+  "required": [
+    "version",
+    "mode",
+    "trading_date",
+    "generated_at",
+    "source_plan_date",
+    "adjustments"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "mode": {
+      "type": "string",
+      "const": "B"
+    },
+    "trading_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_plan_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "adjustments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/adjustment"
+      }
+    }
+  },
+  "$defs": {
+    "adjustment": {
+      "type": "object",
+      "required": ["action", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_-]+$"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "strengthen_entry",
+            "delay_entry",
+            "cancel_trade",
+            "increase_risk",
+            "reduce_risk",
+            "add_opportunity"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "market_regime_alignment": {
+          "type": "string",
+          "enum": ["weak", "moderate", "strong"]
+        },
+        "updates": {
+          "type": "object"
+        },
+        "new_candidate": {
+          "$ref": "#/$defs/trade_candidate"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "add_opportunity"
+              }
+            }
+          },
+          "then": {
+            "required": ["new_candidate"],
+            "not": {
+              "required": ["candidate_id"]
+            }
+          },
+          "else": {
+            "required": ["candidate_id"]
+          }
+        }
+      ]
+    },
+    "trade_candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "symbol",
+        "market",
+        "direction",
+        "sector_tags",
+        "thesis",
+        "entry",
+        "invalidation_price",
+        "stop_logic",
+        "expected_rr",
+        "portfolio_risk_pct",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_-]+$"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "market": {
+          "type": "string",
+          "enum": ["A_SHARE", "US_SHARE"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["long", "watch"]
+        },
+        "sector_tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "thesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry": {
+          "type": "object",
+          "required": ["condition", "trigger_price"],
+          "additionalProperties": false,
+          "properties": {
+            "condition": {
+              "type": "string",
+              "enum": ["break_above", "pullback_to", "reclaim_above"]
+            },
+            "trigger_price": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "invalidation_price": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stop_logic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_rr": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "portfolio_risk_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "status": {
+          "type": "string",
+          "enum": ["planned", "watch_only", "strengthened", "delayed", "cancelled"]
+        }
+      }
+    }
+  }
+}

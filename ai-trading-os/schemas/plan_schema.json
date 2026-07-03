@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/ai-trading-os/plan_schema.json",
+  "title": "MODE A Daily Plan",
+  "type": "object",
+  "required": [
+    "version",
+    "mode",
+    "trading_date",
+    "generated_at",
+    "market",
+    "market_regime",
+    "risk_plan",
+    "candidates"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "mode": {
+      "type": "string",
+      "const": "A"
+    },
+    "trading_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "market": {
+      "type": "string",
+      "enum": ["A_SHARE", "US_SHARE"]
+    },
+    "market_regime": {
+      "type": "object",
+      "required": ["bias", "alignment", "notes"],
+      "additionalProperties": false,
+      "properties": {
+        "bias": {
+          "type": "string",
+          "enum": ["risk_on", "neutral", "risk_off"]
+        },
+        "alignment": {
+          "type": "string",
+          "enum": ["weak", "moderate", "strong"]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "risk_plan": {
+      "type": "object",
+      "required": ["default_risk_pct", "max_single_trade_risk_pct", "next_day_posture"],
+      "additionalProperties": false,
+      "properties": {
+        "default_risk_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "max_single_trade_risk_pct": {
+          "type": "number",
+          "const": 10
+        },
+        "next_day_posture": {
+          "type": "string",
+          "enum": ["defensive", "balanced", "aggressive"]
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/$defs/trade_candidate"
+      }
+    }
+  },
+  "$defs": {
+    "trade_candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "symbol",
+        "market",
+        "direction",
+        "sector_tags",
+        "thesis",
+        "entry",
+        "invalidation_price",
+        "stop_logic",
+        "expected_rr",
+        "portfolio_risk_pct",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_-]+$"
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        },
+        "market": {
+          "type": "string",
+          "enum": ["A_SHARE", "US_SHARE"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["long", "watch"]
+        },
+        "sector_tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "thesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry": {
+          "type": "object",
+          "required": ["condition", "trigger_price"],
+          "additionalProperties": false,
+          "properties": {
+            "condition": {
+              "type": "string",
+              "enum": ["break_above", "pullback_to", "reclaim_above"]
+            },
+            "trigger_price": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
+        },
+        "invalidation_price": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stop_logic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expected_rr": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "portfolio_risk_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "status": {
+          "type": "string",
+          "enum": ["planned", "watch_only"]
+        }
+      }
+    }
+  }
+}

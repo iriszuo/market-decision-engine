@@ -1,0 +1,31 @@
+{
+  "adjustments": [
+    {
+      "action": "strengthen_entry",
+      "candidate_id": "NVDA_20260703_01",
+      "market_regime_alignment": "strong",
+      "reason": "AI semiconductor breadth improved and price held above prior resistance.",
+      "updates": {
+        "entry": {
+          "condition": "reclaim_above",
+          "trigger_price": 129.2
+        },
+        "portfolio_risk_pct": 6,
+        "status": "strengthened"
+      }
+    },
+    {
+      "action": "delay_entry",
+      "candidate_id": "AI_20260703_02",
+      "reason": "Software AI names lagged semiconductor leadership; wait for cleaner breadth confirmation.",
+      "updates": {
+        "status": "delayed"
+      }
+    }
+  ],
+  "generated_at": "2026-07-03T15:00:00Z",
+  "mode": "B",
+  "source_plan_date": "2026-07-03",
+  "trading_date": "2026-07-03",
+  "version": "1.0"
+}

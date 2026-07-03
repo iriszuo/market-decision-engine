@@ -1,0 +1,64 @@
+{
+  "candidates": [
+    {
+      "direction": "long",
+      "entry": {
+        "condition": "pullback_to",
+        "trigger_price": 41.2
+      },
+      "expected_rr": 2.1,
+      "id": "AI_20260703_02",
+      "invalidation_price": 38.6,
+      "manual_execution_only": true,
+      "market": "US_SHARE",
+      "portfolio_risk_pct": 4,
+      "sector_tags": [
+        "AI",
+        "software"
+      ],
+      "status": "delayed",
+      "stop_logic": "If filled, exit review occurs after T+1 unless invalidation is breached and sector breadth turns risk-off.",
+      "symbol": "AI",
+      "thesis": "Software AI beta is acceptable only on controlled pullback with broader AI sector support."
+    },
+    {
+      "direction": "long",
+      "entry": {
+        "condition": "reclaim_above",
+        "trigger_price": 129.2
+      },
+      "expected_rr": 2.4,
+      "id": "NVDA_20260703_01",
+      "invalidation_price": 121.2,
+      "manual_execution_only": true,
+      "market": "US_SHARE",
+      "portfolio_risk_pct": 6,
+      "sector_tags": [
+        "AI",
+        "semiconductor"
+      ],
+      "status": "strengthened",
+      "stop_logic": "If filled, stop is reviewed after T+1 session close unless price breaches invalidation intraday with abnormal volume.",
+      "symbol": "NVDA",
+      "thesis": "AI semiconductor leadership remains constructive if price reclaims short-term momentum above trigger."
+    }
+  ],
+  "generated_at": "2026-07-03T15:00:00Z",
+  "market": "US_SHARE",
+  "market_regime": {
+    "alignment": "moderate",
+    "bias": "neutral",
+    "notes": "AI sector leadership is constructive but index breadth is mixed."
+  },
+  "mode": "FINAL",
+  "risk_summary": {
+    "max_single_trade_risk_pct": 10.0,
+    "total_active_risk_pct": 10.0
+  },
+  "source_files": {
+    "adjustment": "ai-trading-os/state/adjustment.json",
+    "plan": "ai-trading-os/state/plan.json"
+  },
+  "trading_date": "2026-07-03",
+  "version": "1.0"
+}

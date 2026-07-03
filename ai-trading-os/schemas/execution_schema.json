@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/ai-trading-os/execution_schema.json",
+  "title": "Merged Manual Execution State",
+  "type": "object",
+  "required": [
+    "version",
+    "mode",
+    "trading_date",
+    "generated_at",
+    "source_files",
+    "market",
+    "market_regime",
+    "risk_summary",
+    "candidates"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "mode": {
+      "type": "string",
+      "const": "FINAL"
+    },
+    "trading_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_files": {
+      "type": "object",
+      "required": ["plan", "adjustment"],
+      "additionalProperties": false,
+      "properties": {
+        "plan": {
+          "type": "string"
+        },
+        "adjustment": {
+          "type": "string"
+        }
+      }
+    },
+    "market": {
+      "type": "string",
+      "enum": ["A_SHARE", "US_SHARE"]
+    },
+    "market_regime": {
+      "type": "object"
+    },
+    "risk_summary": {
+      "type": "object",
+      "required": ["total_active_risk_pct", "max_single_trade_risk_pct"],
+      "additionalProperties": false,
+      "properties": {
+        "total_active_risk_pct": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_single_trade_risk_pct": {
+          "type": "number",
+          "const": 10
+        }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/final_candidate"
+      }
+    }
+  },
+  "$defs": {
+    "final_candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "symbol",
+        "market",
+        "direction",
+        "sector_tags",
+        "thesis",
+        "entry",
+        "invalidation_price",
+        "stop_logic",
+        "expected_rr",
+        "portfolio_risk_pct",
+        "status",
+        "manual_execution_only"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string",
+          "enum": ["A_SHARE", "US_SHARE"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["long", "watch"]
+        },
+        "sector_tags": {
+          "type": "array"
+        },
+        "thesis": {
+          "type": "string"
+        },
+        "entry": {
+          "type": "object"
+        },
+        "invalidation_price": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stop_logic": {
+          "type": "string"
+        },
+        "expected_rr": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "portfolio_risk_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "status": {
+          "type": "string",
+          "enum": ["planned", "watch_only", "strengthened", "delayed", "cancelled"]
+        },
+        "manual_execution_only": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  }
+}
